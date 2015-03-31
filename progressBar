@@ -1,0 +1,46 @@
+		private static const arrHeight:Array=[28, 110, 190, 272, 308];
+		private static const arrScore:Array=[20, 40, 80, 100, 105];
+		
+	  /**设置进度条*/
+		private function setProgressBar(num:int):void
+		{
+			if (num > 100)
+			{
+				progressBar.progress=1;
+				return;
+			}
+			var index:int=0;
+			for (var i:int=0; i < arrScore.length; i++)
+			{
+				//判断分数所在位置
+				if (num <= arrScore[i])
+				{
+					index=i;
+					break;
+				}
+			}
+			if (num == arrScore[index])
+			{
+				progressBar.progress=arrHeight[index] / 308;
+			}
+			else
+			{
+				var prior:int=index - 1;
+				var pNum:Number;
+				if (prior < 0)
+				{
+					pNum=arrHeight[index] / arrScore[index];
+					progressBar.progress=pNum * num / 308;
+				}
+				else
+				{
+					var height:Number=arrHeight[prior]; //前面一个位置的高度
+					var xH:int=arrHeight[index] - arrHeight[prior]; //当前和前一个之间的高度
+					var xNum:int=arrScore[index] - arrScore[prior]; //两个位置间的分数
+					var amount:int=num - arrScore[prior];
+					pNum=xH / xNum; //每1分占据的长度
+					var curHeight:Number=pNum * amount + height; //总的长度
+					progressBar.progress=curHeight / 308;
+				}
+			}
+		}
